@@ -1,0 +1,176 @@
+swagger: "2.0"
+info:
+  description: "Welcome to the College List API.  Here you can sample querying and managing a collection of schools and their associated products."
+  version: "1.0.0"
+  title: "College List API"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "127.0.0.1:8000"
+basePath: "/v1"
+tags:
+- name: "schools"
+  description: "Peruse all the schools"
+- name: "products"
+  description: "Manage all the products"
+schemes:
+- "https"
+- "http"
+paths:
+  /schools:
+    post:
+      tags:
+      - "schools"
+      summary: "Add a new school"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "New School Object"
+        required: true
+        schema:
+          $ref: "#/definitions/School"
+      responses:
+        405:
+          description: "Invalid input"
+    put:
+      tags:
+      - "schools"
+      summary: "Modify a School"
+      description: ""
+      operationId: "updatePet"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "School object to be modified.  School name must match existing school."
+        required: true
+        schema:
+          $ref: "#/definitions/School"
+      responses:
+        400:
+          description: "Invalid name supplied"
+        404:
+          description: "School not found"
+        405:
+          description: "Validation exception"
+  /schools/{school_id}/products:
+    get:
+      tags:
+      - "schools"
+      summary: "Find school's products"
+      description: "Retrieve the referenced school's products"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: school_id
+        in: path
+        description: Unique School Name String
+        type: string
+        required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Product"
+        400:
+          description: "Invalid status value"
+        404:
+          description: "School not found"
+  /products/schoolsCount: 
+    get:
+      tags:
+      - "products"
+      summary: "Get the count of schools per product"
+      description: "Get the count of schools per product"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: filter
+        in: query
+        description: filter by the count of the schools per product
+        type: string
+        required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ProductCountRespons"
+        400:
+          description: "Invalid status value"
+        404:
+          description: "School not found" 
+  /products/value:  
+definitions:
+  School:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "The School's Name"
+        example: "Code Camp"
+      city:
+        type: "string"
+        description: "The School's City"
+        example: "Boulder"
+      state:
+        type: "string"
+        description: "The School's State"
+        example: "CO"
+      zip:
+        type: "integer"
+        description: "The School's Zip Code"
+        example: 80301
+      circulation:
+        type: "integer"
+        description: "The School's Total Circulation"
+        example: 5432
+      products:
+        type: "boolean"
+        default: false
+  Product:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "The Product's Name"
+        example: "Full Page Ad"
+      price:
+        type: number
+        format: currency
+        description: "The Product's Price"
+        example: "123.45"
+  ProductCountRespons:
+    type: "object"
+    properties:
+      product_id:
+        type: "integer"
+      product_name:
+        type: "string"
+        description: "The Product's Name"
+        example: "Full Page Ad"
+      school_count:
+        type: number
+        description: "The count of schools with this product"
+        example: "42"
+      
+ 
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
